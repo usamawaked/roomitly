@@ -11,9 +11,9 @@ import type {Route} from "./+types/root";
 import "./app.css";
 import {useEffect, useState} from "react";
 import {
-    getCurrentUser,
-    signIn as puterSignIn,
-    signOut as puterSignOut,
+    getCurrentUser,//func that calls user id
+    signIn as puterSignIn, //puter sign in
+    signOut as puterSignOut, //puter sign out
 } from "../lib/puter.action";
 
 export const links: Route.LinksFunction = () => [
@@ -47,7 +47,7 @@ export function Layout({children}: { children: React.ReactNode }) {
     );
 }
 
-
+//default authentication state
 const DEFAULT_AUTH_STATE: AuthState = {
     isSignedIn: false,
     userName: null,
@@ -57,10 +57,12 @@ const DEFAULT_AUTH_STATE: AuthState = {
 export default function App() {
     const [authState, setAuthState] = useState<AuthState>(DEFAULT_AUTH_STATE);
 
+    //check if authentication is valid
     const refreshAuth = async () => {
         try {
+            //user = current user state
             const user = await getCurrentUser();
-
+            // set auth state to user
             setAuthState({
                 isSignedIn: !!user,
                 userName: user?.username || null,
@@ -69,12 +71,12 @@ export default function App() {
 
             return !!user;
         } catch {
-            setAuthState(DEFAULT_AUTH_STATE);
+            setAuthState(DEFAULT_AUTH_STATE);//else set current auth state to default(null)
             return false;
         }
     }
 
-    useEffect(() => {
+    useEffect(() => {//refresh after app is rendered
         refreshAuth();
     }, []);
 
